@@ -1,0 +1,130 @@
+﻿@{
+    ViewData["Title"] = "Home - Food Safety Tracker";
+}
+
+<div class="text-center">
+    <h1 class="display-4">Food Safety Inspection Tracker</h1>
+    <p class="lead">Local Council Food Safety Management System</p>
+    <hr />
+</div>
+
+@if (User.Identity.IsAuthenticated)
+{
+    <div class="row mt-4">
+        <div class="col-md-4 mb-3">
+            <div class="card h-100 shadow-sm">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0"> Dashboard</h5>
+                </div>
+                <div class="card-body">
+                    <p>View inspection statistics, failed inspections, and overdue follow-ups.</p>
+                    <p class="text-muted small">Filter by town and risk rating</p>
+                    <a asp-controller="Dashboard" asp-action="Index" class="btn btn-primary">Go to Dashboard →</a>
+                </div>
+            </div>
+        </div>
+        
+        @if (User.IsInRole("Admin") || User.IsInRole("Inspector"))
+        {
+            <div class="col-md-4 mb-3">
+                <div class="card h-100 shadow-sm">
+                    <div class="card-header bg-success text-white">
+                        <h5 class="mb-0"> New Inspection</h5>
+                    </div>
+                    <div class="card-body">
+                        <p>Record a new food premises inspection with score and outcome.</p>
+                        <p class="text-muted small">Scores: 0-100 (Pass ≥ 60, Fail ≤ 59)</p>
+                        <a asp-controller="Inspections" asp-action="Create" class="btn btn-success">Create Inspection →</a>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-md-4 mb-3">
+                <div class="card h-100 shadow-sm">
+                    <div class="card-header bg-warning">
+                        <h5 class="mb-0"> Follow-ups</h5>
+                    </div>
+                    <div class="card-body">
+                        <p>Track and manage follow-up actions for failed inspections.</p>
+                        <p class="text-muted small">Monitor overdue follow-ups</p>
+                        <a asp-controller="FollowUps" asp-action="Index" class="btn btn-warning">View Follow-ups →</a>
+                    </div>
+                </div>
+            </div>
+        }
+        
+        @if (User.IsInRole("Admin"))
+        {
+            <div class="col-md-4 mb-3">
+                <div class="card h-100 shadow-sm">
+                    <div class="card-header bg-danger text-white">
+                        <h5 class="mb-0">Manage Premises</h5>
+                    </div>
+                    <div class="card-body">
+                        <p>Add, edit, or remove food premises from the system.</p>
+                        <p class="text-muted small">Admin only</p>
+                        <a asp-controller="Premises" asp-action="Index" class="btn btn-danger">Manage Premises →</a>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+    
+    @if (User.IsInRole("Viewer"))
+    {
+        <div class="alert alert-info mt-4">
+            <strong> Viewer Access:</strong> You have read-only access to inspections and the dashboard.
+        </div>
+    }
+}
+else
+{
+    <div class="row mt-5">
+        <div class="col-md-8 offset-md-2">
+            <div class="alert alert-info text-center">
+                <h4> Please login to access the Food Safety Inspection System</h4>
+                <p>Use the following test accounts:</p>
+                <div class="row mt-3">
+                    <div class="col-md-4">
+                        <div class="card">
+                            <div class="card-header bg-primary text-white">
+                                Admin
+                            </div>
+                            <div class="card-body">
+                                <p><strong>Email:</strong> admin@foodsafety.gov</p>
+                                <p><strong>Password:</strong> Admin@123</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="card">
+                            <div class="card-header bg-success text-white">
+                                Inspector
+                            </div>
+                            <div class="card-body">
+                                <p><strong>Email:</strong> inspector@foodsafety.gov</p>
+                                <p><strong>Password:</strong> Inspector@123</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="card">
+                            <div class="card-header bg-warning">
+                                Viewer
+                            </div>
+                            <div class="card-body">
+                                <p><strong>Email:</strong> viewer@foodsafety.gov</p>
+                                <p><strong>Password:</strong> Viewer@123</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="mt-4">
+                    <a asp-area="Identity" asp-page="/Account/Login" class="btn btn-primary btn-lg">Login</a>
+                    <span class="mx-2">or</span>
+                    <a asp-area="Identity" asp-page="/Account/Register" class="btn btn-secondary btn-lg">Register</a>
+                </div>
+            </div>
+        </div>
+    </div>
+}

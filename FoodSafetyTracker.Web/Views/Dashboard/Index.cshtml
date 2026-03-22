@@ -1,0 +1,95 @@
+﻿@model FoodSafetyTracker.Web.Controllers.DashboardViewModel
+@{
+    ViewData["Title"] = "Dashboard";
+}
+
+<h1>Food Safety Dashboard</h1>
+
+<!-- Filter Form -->
+<div class="card mb-4">
+    <div class="card-header">
+        <h5>Filter by Location & Risk</h5>
+    </div>
+    <div class="card-body">
+        <form method="get" class="row g-3">
+            <div class="col-md-4">
+                <label class="form-label">Town</label>
+                <select name="town" class="form-select" asp-items="ViewBag.Towns as SelectList">
+                    <option value="">All Towns</option>
+                </select>
+            </div>
+            <div class="col-md-4">
+                <label class="form-label">Risk Rating</label>
+                <select name="riskRating" class="form-select">
+                    <option value="">All</option>
+                    <option value="Low">Low</option>
+                    <option value="Medium">Medium</option>
+                    <option value="High">High</option>
+                </select>
+            </div>
+            <div class="col-md-4 d-flex align-items-end">
+                <button type="submit" class="btn btn-primary">Apply Filters</button>
+                <a asp-action="Index" class="btn btn-secondary ms-2">Clear</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Stats Cards -->
+<div class="row">
+    <div class="col-md-3">
+        <div class="card text-white bg-primary mb-3">
+            <div class="card-header">Inspections This Month</div>
+            <div class="card-body">
+                <h2 class="card-title">@Model.InspectionsThisMonth</h2>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card text-white bg-danger mb-3">
+            <div class="card-header">Failed Inspections</div>
+            <div class="card-body">
+                <h2 class="card-title">@Model.FailedInspectionsThisMonth</h2>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card text-white bg-warning mb-3">
+            <div class="card-header">Overdue Follow-Ups</div>
+            <div class="card-body">
+                <h2 class="card-title">@Model.OverdueFollowUps</h2>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card text-white bg-info mb-3">
+            <div class="card-header">Avg. Inspection Score</div>
+            <div class="card-body">
+                <h2 class="card-title">@Model.AverageScore.ToString("F1")</h2>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Additional Stats -->
+<div class="row">
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">
+                <h5>Summary</h5>
+            </div>
+            <div class="card-body">
+                <table class="table">
+                    <tr>
+                        <th>Total Premises:</th>
+                        <td>@Model.TotalPremises</td>
+                    </tr>
+                    <tr>
+                        <th>Total Inspections:</th>
+                        <td>@Model.TotalInspections</td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
