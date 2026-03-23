@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using FoodSafetyTracker.Web.Data;
+using FoodSafetyTracker.Domain.Entities;
 
 namespace FoodSafetyTracker.Web.Controllers
 {

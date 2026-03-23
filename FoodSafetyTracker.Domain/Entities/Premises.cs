@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace FoodSafetyTracker.Web.Models
-{
+namespace FoodSafetyTracker.Domain.Entities;
+
     public class Premises
     {
         [Key]
@@ -23,4 +23,3 @@ namespace FoodSafetyTracker.Web.Models
         // Navigation property - one Premises has many Inspections
         public ICollection<Inspection>? Inspections { get; set; }
     }
-}

@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace FoodSafetyTracker.Web.Models
-{
+namespace FoodSafetyTracker.Domain.Entities;
+
     public class FollowUp
     {
         [Key]
@@ -25,4 +25,3 @@ namespace FoodSafetyTracker.Web.Models
         // Navigation property
         public Inspection? Inspection { get; set; }
     }
-}

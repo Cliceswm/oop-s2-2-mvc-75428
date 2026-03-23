@@ -1,5 +1,5 @@
 ﻿using FoodSafetyTracker.Web.Data;
-using FoodSafetyTracker.Web.Models;
+using FoodSafetyTracker.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Linq;

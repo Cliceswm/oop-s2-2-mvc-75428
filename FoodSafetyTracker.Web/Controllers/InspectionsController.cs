@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using FoodSafetyTracker.Web.Data;
-using FoodSafetyTracker.Web.Models;
+using FoodSafetyTracker.Domain.Entities;
 
 namespace FoodSafetyTracker.Web.Controllers
 {

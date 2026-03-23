@@ -1,4 +1,5 @@
 <Solution>
+  <Project Path="FoodSafetyTracker.Domain/FoodSafetyTracker.Domain.csproj" Id="af49c73e-a412-4c94-bb53-e00fab236645" />
   <Project Path="FoodSafetyTracker.Tests/FoodSafetyTracker.Tests.csproj" />
   <Project Path="FoodSafetyTracker.Web/FoodSafetyTracker.Web.csproj" />
 </Solution>

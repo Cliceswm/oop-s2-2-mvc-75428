@@ -1,9 +1,9 @@
-namespace FoodSafetyTracker.Web.Models
-{
+namespace FoodSafetyTracker.Domain.Entities;
+
     public class ErrorViewModel
     {
         public string? RequestId { get; set; }
 
         public bool ShowRequestId => !string.IsNullOrEmpty(RequestId);
     }
-}
+

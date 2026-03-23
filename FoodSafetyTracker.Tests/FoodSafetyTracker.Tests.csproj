@@ -15,6 +15,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\FoodSafetyTracker.Domain\FoodSafetyTracker.Domain.csproj" />
     <ProjectReference Include="..\FoodSafetyTracker.Web\FoodSafetyTracker.Web.csproj" />
   </ItemGroup>
 

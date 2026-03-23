@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using FoodSafetyTracker.Web.Models;
+using FoodSafetyTracker.Domain.Entities;
 
 namespace FoodSafetyTracker.Web.Data
 {

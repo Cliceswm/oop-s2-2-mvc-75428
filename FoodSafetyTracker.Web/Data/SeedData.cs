@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using FoodSafetyTracker.Web.Models;
+using FoodSafetyTracker.Domain.Entities;
 using Bogus;
 
 namespace FoodSafetyTracker.Web.Data

@@ -1,6 +1,6 @@
 using FoodSafetyTracker.Web.Data;
 using FoodSafetyTracker.Web.Middleware;
-using FoodSafetyTracker.Web.Models;
+using FoodSafetyTracker.Domain.Entities;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Serilog;

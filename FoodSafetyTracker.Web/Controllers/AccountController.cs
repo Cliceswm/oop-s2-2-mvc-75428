@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-
+using FoodSafetyTracker.Domain.Entities;
 namespace FoodSafetyTracker.Web.Controllers
 {
     public class AccountController : Controller
