@@ -28,7 +28,7 @@ namespace FoodSafetyTracker.Tests
             {
                 Name = "Test Cafe",
                 Town = "Dublin",
-                RiskRating = RiskRating.Medium
+                RiskRating = "Medium"  // ← string
             };
             context.Premises.Add(premises);
             context.SaveChanges();
@@ -38,7 +38,7 @@ namespace FoodSafetyTracker.Tests
                 PremisesId = premises.Id,
                 InspectionDate = today.AddDays(-30),
                 Score = 50,
-                Outcome = Outcome.Fail,
+                Outcome = "Fail",  // ← string
                 Notes = "Test inspection"
             };
             context.Inspections.Add(inspection);
@@ -48,19 +48,19 @@ namespace FoodSafetyTracker.Tests
             {
                 InspectionId = inspection.Id,
                 DueDate = today.AddDays(-5),
-                Status = FollowUpStatus.Open
+                Status = "Open"  // ← string
             };
             var notOverdueFollowUp = new FollowUp
             {
                 InspectionId = inspection.Id,
                 DueDate = today.AddDays(10),
-                Status = FollowUpStatus.Open
+                Status = "Open"  // ← string
             };
             var closedFollowUp = new FollowUp
             {
                 InspectionId = inspection.Id,
                 DueDate = today.AddDays(-5),
-                Status = FollowUpStatus.Closed,
+                Status = "Closed",  // ← string
                 ClosedDate = today
             };
 
@@ -69,7 +69,7 @@ namespace FoodSafetyTracker.Tests
 
             // Act
             var overdueCount = context.FollowUps
-                .Count(f => f.DueDate < today && f.Status == FollowUpStatus.Open);
+                .Count(f => f.DueDate < today && f.Status == "Open");
 
             // Assert
             Assert.Equal(1, overdueCount);
@@ -81,12 +81,12 @@ namespace FoodSafetyTracker.Tests
             // Arrange & Act
             var followUp = new FollowUp
             {
-                Status = FollowUpStatus.Closed,
+                Status = "Closed",  // ← string
                 ClosedDate = null
             };
 
             // Assert - business rule validation
-            var isValid = !(followUp.Status == FollowUpStatus.Closed && !followUp.ClosedDate.HasValue);
+            var isValid = !(followUp.Status == "Closed" && !followUp.ClosedDate.HasValue);
             Assert.False(isValid, "Closed follow-ups must have a ClosedDate");
         }
 
@@ -106,8 +106,8 @@ namespace FoodSafetyTracker.Tests
         public void Premises_HasValidRiskRating()
         {
             // Arrange
-            var validRatings = new[] { RiskRating.Low, RiskRating.Medium, RiskRating.High };
-            var premises = new Premises { RiskRating = RiskRating.Medium };
+            var validRatings = new[] { "Low", "Medium", "High" };  // ← strings
+            var premises = new Premises { RiskRating = "Medium" };  // ← string
 
             // Assert
             Assert.Contains(premises.RiskRating, validRatings);
@@ -125,7 +125,7 @@ namespace FoodSafetyTracker.Tests
             {
                 Name = "Test Business",
                 Town = "Dublin",
-                RiskRating = RiskRating.High
+                RiskRating = "High"  // ← string
             };
             context.Premises.Add(premises);
             context.SaveChanges();
@@ -135,7 +135,7 @@ namespace FoodSafetyTracker.Tests
                 PremisesId = premises.Id,
                 InspectionDate = firstDayOfMonth.AddDays(5),
                 Score = 85,
-                Outcome = Outcome.Pass,
+                Outcome = "Pass",  // ← string
                 Notes = "First inspection"
             };
             var inspection2 = new Inspection
@@ -143,7 +143,7 @@ namespace FoodSafetyTracker.Tests
                 PremisesId = premises.Id,
                 InspectionDate = firstDayOfMonth.AddDays(10),
                 Score = 45,
-                Outcome = Outcome.Fail,
+                Outcome = "Fail",  // ← string
                 Notes = "Second inspection"
             };
             context.Inspections.AddRange(inspection1, inspection2);
@@ -156,7 +156,7 @@ namespace FoodSafetyTracker.Tests
             var failedInspectionsThisMonth = context.Inspections
                 .Count(i => i.InspectionDate >= firstDayOfMonth &&
                            i.InspectionDate <= today &&
-                           i.Outcome == Outcome.Fail);
+                           i.Outcome == "Fail");  // ← string
 
             // Assert
             Assert.Equal(2, inspectionsThisMonth);
