@@ -37,7 +37,7 @@ namespace FoodSafetyTracker.Tests
             {
                 PremisesId = premises.Id,
                 InspectionDate = today.AddDays(-30),
-                Score = 50,
+                Score = 51,
                 Outcome = "Fail",  // ← string
                 Notes = "Test inspection"
             };
