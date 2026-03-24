@@ -89,7 +89,7 @@ namespace FoodSafetyTracker.Web.Data
                 .RuleFor(i => i.InspectionDate, f => f.Date.Past(90))
                 .RuleFor(i => i.Score, f => f.Random.Int(0, 100))
                 .RuleFor(i => i.Outcome, (f, i) => i.Score >= 60 ? "Pass" : "Fail")
-                .RuleFor(i => i.Notes, f => f.Lorem.Sentence());
+                .RuleFor(i => i.Notes, (f, i) => GetInspectionNotes(i.Outcome, i.Score)); 
 
             var inspections = inspectionFaker.Generate(25);
             await context.Inspections.AddRangeAsync(inspections);
@@ -110,6 +110,50 @@ namespace FoodSafetyTracker.Web.Data
             var followUps = followUpFaker.Generate(10);
             await context.FollowUps.AddRangeAsync(followUps);
             await context.SaveChangesAsync();
+        }
+        private static string GetInspectionNotes(string outcome, int score)
+        {
+            var passNotes = new[]
+            {
+                "All food handling practices compliant. Temperature controls within limits. Staff hygiene excellent.",
+                "Good hygiene standards observed. Proper storage of raw and cooked foods.",
+                "Satisfactory inspection. Minor improvement suggested for record keeping.",
+                "Clean premises, proper waste management. No critical violations.",
+                "Food safety management system in place. Staff trained adequately."
+            };
+
+            var failNotes = new[]
+            {
+                "CRITICAL: Raw meat stored above ready-to-eat foods. Immediate corrective action required.",
+                "Poor handwashing practices observed. No soap in staff washroom.",
+                "Pest activity detected in storage area. Professional pest control required.",
+                "Food temperatures above safe limits. Refrigeration unit not functioning properly.",
+                "Lack of food safety training records. No allergen information displayed.",
+                "Dirty kitchen surfaces. Food debris accumulation under equipment.",
+                "Expired food products found in storage. Poor stock rotation."
+            };
+
+            var borderNotes = new[]
+            {
+                "Improvement needed in cleaning schedule. Several areas require attention.",
+                "Temperature logs incomplete for the past week. Reminded staff to maintain records.",
+                "Minor issues with waste disposal. Advised to increase collection frequency.",
+                "Some food containers not properly labeled with date. Advised to implement FIFO system.",
+                "Handwashing sink obstructed. Cleared during inspection."
+            };
+
+            if (outcome == "Pass" && score >= 85)
+            {
+                return passNotes[new Random().Next(passNotes.Length)];
+            }
+            else if (outcome == "Pass" && score < 85)
+            {
+                return borderNotes[new Random().Next(borderNotes.Length)];
+            }
+            else
+            {
+                return failNotes[new Random().Next(failNotes.Length)];
+            }
         }
     }
 }
