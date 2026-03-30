@@ -205,13 +205,37 @@ namespace FoodSafetyTracker.Web.Controllers
         [Authorize(Roles = "Admin")] // Only Admin can delete
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var inspection = await _context.Inspections.FindAsync(id);
-            if (inspection != null)
+            try
             {
-                _context.Inspections.Remove(inspection);
+                // Load the Inspection with related FollowUps
+                var inspection = await _context.Inspections
+                    .Include(i => i.FollowUps)
+                    .FirstOrDefaultAsync(i => i.Id == id);
 
-                // Log deletion
-                _logger.LogWarning("Inspection deleted: {@InspectionDeleted}", new
+                if (inspection == null)
+                {
+                    _logger.LogWarning("Delete failed: Inspection {Id} not found", id);
+                    return NotFound();
+                }
+
+                // Log before deleting
+                _logger.LogInformation("Attempting to delete Inspection {Id} with {FollowUpCount} follow-ups by {User}",
+                    id, inspection.FollowUps?.Count ?? 0, User.Identity?.Name ?? "Unknown");
+
+                // Remove related FollowUps first
+                if (inspection.FollowUps != null && inspection.FollowUps.Any())
+                {
+                    _context.FollowUps.RemoveRange(inspection.FollowUps);
+                    _logger.LogInformation("Removed {Count} follow-ups for Inspection {Id}",
+                        inspection.FollowUps.Count, id);
+                }
+
+                // Remove the Inspection
+                _context.Inspections.Remove(inspection);
+                await _context.SaveChangesAsync();
+
+                // Log success
+                _logger.LogInformation("Inspection deleted successfully: {@InspectionDeleted}", new
                 {
                     InspectionId = id,
                     PremisesId = inspection.PremisesId,
@@ -219,15 +243,39 @@ namespace FoodSafetyTracker.Web.Controllers
                     Outcome = inspection.Outcome,
                     User = User.Identity?.Name ?? "Unknown"
                 });
+
+                TempData["Success"] = "Inspection deleted successfully.";
+                return RedirectToAction(nameof(Index));
+            }
+            catch (DbUpdateConcurrencyException ex)
+            {
+                // Handle concurrency - check if inspection still exists
+                if (!InspectionExists(id))
+                {
+                    _logger.LogWarning("Delete failed: Inspection {Id} was already deleted", id);
+                    return NotFound();
+                }
+
+                _logger.LogError(ex, "Concurrency error deleting Inspection {Id} by {User}",
+                    id, User.Identity?.Name ?? "Unknown");
+
+                TempData["Error"] = "The inspection was modified by another user. Please try again.";
+                return RedirectToAction(nameof(Index));
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error deleting Inspection {Id} by {User}",
+                    id, User.Identity?.Name ?? "Unknown");
+
+                TempData["Error"] = "An error occurred while deleting the inspection.";
+                return RedirectToAction(nameof(Index));
             }
 
-            await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
         }
-
-        private bool InspectionExists(int id)
+    private bool InspectionExists(int id)
         {
             return _context.Inspections.Any(e => e.Id == id);
         }
     }
 }
+

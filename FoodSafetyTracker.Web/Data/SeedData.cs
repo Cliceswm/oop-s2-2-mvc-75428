@@ -26,7 +26,7 @@ namespace FoodSafetyTracker.Web.Data
                 }
             }
 
-            // Create users
+            // Create users (unchanged)
             var adminEmail = "admin@foodsafety.gov";
             if (await userManager.FindByEmailAsync(adminEmail) == null)
             {
@@ -69,27 +69,63 @@ namespace FoodSafetyTracker.Web.Data
             // Check if we already have data
             if (context.Premises.Any()) return;
 
-            // Generate Premises
+            // -----------------------------------------------------------------
+            // 1. Define realistic food premises names (no Lorem Ipsum)
+            // -----------------------------------------------------------------
+            var realisticPremisesNames = new[]
+            {
+                // Cafés & Coffee Shops
+                "The Brew House", "Morning Grind Coffee", "Café Central", "The Daily Grind",
+                "Cozy Corner Café", "Java Junction", "The Tea Room", "Caffè Milano",
+
+                // Restaurants
+                "The Spice Route", "Olive Tree Bistro", "Seaside Grill", "The Golden Dragon",
+                "Pizza Paradiso", "Burger & Co.", "The Hungry Monk", "Taste of India",
+
+                // Takeaways & Fast Food
+                "Kebab Express", "Wok This Way", "Pizza Planet", "The Fryer's Catch",
+                "Curry in a Hurry", "Sub Station", "Taco Fiesta", "The Burger Den",
+
+                // Bakeries & Delis
+                "The Bread Basket", "Flour Power Bakery", "Sweet Treats Patisserie",
+                "Deli on Main", "The Sandwich Shop",
+
+                // Pubs & Bars (often serve food)
+                "The Queen's Head", "The Royal Oak", "The Swan Inn", "The Red Lion",
+                "The Ale House", "The Crown & Anchor"
+            };
+
             var towns = new[] { "Dublin City", "Cork City", "Galway City" };
             var riskLevels = new[] { "Low", "Medium", "High" };
 
-            var premisesFaker = new Faker<Premises>()
-                .RuleFor(p => p.Name, f => f.Company.CompanyName())
-                .RuleFor(p => p.Address, f => f.Address.StreetAddress())
-                .RuleFor(p => p.Town, f => f.PickRandom(towns))
-                .RuleFor(p => p.RiskRating, f => f.PickRandom(riskLevels));
+            // Generate premises 
+            var premises = new List<Premises>();
+            var faker = new Faker(); // just for random selections
 
-            var premises = premisesFaker.Generate(12);
+      
+            for (int i = 0; i < 12; i++)
+            {
+                // Cycle through the list or pick random
+                var name = realisticPremisesNames[i % realisticPremisesNames.Length];
+                premises.Add(new Premises
+                {
+                    Name = name,
+                    Address = faker.Address.StreetAddress(),
+                    Town = faker.PickRandom(towns),
+                    RiskRating = faker.PickRandom(riskLevels)
+                });
+            }
+
             await context.Premises.AddRangeAsync(premises);
             await context.SaveChangesAsync();
 
-            // Generate Inspections
+            // Generate Inspections 
             var inspectionFaker = new Faker<Inspection>()
                 .RuleFor(i => i.PremisesId, f => f.PickRandom(premises).Id)
                 .RuleFor(i => i.InspectionDate, f => f.Date.Past(90))
                 .RuleFor(i => i.Score, f => f.Random.Int(0, 100))
                 .RuleFor(i => i.Outcome, (f, i) => i.Score >= 60 ? "Pass" : "Fail")
-                .RuleFor(i => i.Notes, (f, i) => GetInspectionNotes(i.Outcome, i.Score)); 
+                .RuleFor(i => i.Notes, (f, i) => GetInspectionNotes(i.Outcome, i.Score));
 
             var inspections = inspectionFaker.Generate(25);
             await context.Inspections.AddRangeAsync(inspections);
@@ -111,6 +147,7 @@ namespace FoodSafetyTracker.Web.Data
             await context.FollowUps.AddRangeAsync(followUps);
             await context.SaveChangesAsync();
         }
+
         private static string GetInspectionNotes(string outcome, int score)
         {
             var passNotes = new[]

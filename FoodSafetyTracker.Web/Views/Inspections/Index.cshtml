@@ -2,59 +2,77 @@
 @model IEnumerable<FoodSafetyTracker.Domain.Entities.Inspection>
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Inspections";
 }
 
-<h1>Index</h1>
+@* Success/Error messages *@
+@if (TempData["Success"] != null)
+{
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+        @TempData["Success"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+}
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
+@if (TempData["Error"] != null)
+{
+    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+        @TempData["Error"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+}
+
+<h1>Inspections</h1>
+
+@* Create button - only visible to Admin and Inspector *@
+@if (User.IsInRole("Admin") || User.IsInRole("Inspector"))
+{
+    <p>
+        <a asp-action="Create" class="btn btn-primary">Create New Inspection</a>
+    </p>
+}
+
 <table class="table">
     <thead>
         <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.InspectionDate)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Score)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Outcome)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Notes)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Premises)
-            </th>
-            <th></th>
+            <th>Inspection Date</th>
+            <th>Score</th>
+            <th>Outcome</th>
+            <th>Notes</th>
+            <th>Premises</th>
+            <th>Actions</th>
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.InspectionDate)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Score)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Outcome)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Notes)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Premises.Address)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
-            </td>
-        </tr>
-}
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@Html.DisplayFor(modelItem => item.InspectionDate)</td>
+                <td>@Html.DisplayFor(modelItem => item.Score)</td>
+                <td>
+                    @{
+                        var badgeClass = item.Outcome == "Pass" ? "badge bg-success" : "badge bg-danger";
+                    }
+                    <span class="@badgeClass">@item.Outcome</span>
+                </td>
+                <td>@Html.DisplayFor(modelItem => item.Notes)</td>
+                <td>@item.Premises?.Name (@item.Premises?.Town)</td>
+                <td>
+                    <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-info btn-sm">Details</a>
+                
+                    @* Edit button - only visible to Admin and Inspector *@
+                    @if (User.IsInRole("Admin") || User.IsInRole("Inspector"))
+                    {
+                        <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-warning btn-sm">Edit</a>
+                    }
+                
+                    @* Delete button - only visible to Admin *@
+                    @if (User.IsInRole("Admin"))
+                    {
+                        <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-danger btn-sm">Delete</a>
+                    }
+                </td>
+            </tr>
+        }
     </tbody>
 </table>

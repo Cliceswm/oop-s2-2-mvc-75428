@@ -14,17 +14,31 @@
         <form method="get" class="row g-3">
             <div class="col-md-4">
                 <label class="form-label">Town</label>
-                <select name="town" class="form-select" asp-items="ViewBag.Towns as SelectList">
+                <select name="town" class="form-select">
                     <option value="">All Towns</option>
+                    @if (ViewBag.Towns != null)
+                    {
+                        @foreach (var town in ViewBag.Towns)
+                        {
+                            if (ViewBag.SelectedTown == town)
+                            {
+                                <option value="@town" selected>@town</option>
+                            }
+                            else
+                            {
+                                <option value="@town">@town</option>
+                            }
+                        }
+                    }
                 </select>
             </div>
             <div class="col-md-4">
                 <label class="form-label">Risk Rating</label>
                 <select name="riskRating" class="form-select">
                     <option value="">All</option>
-                    <option value="Low">Low</option>
-                    <option value="Medium">Medium</option>
-                    <option value="High">High</option>
+                    <option value="Low" selected="@(ViewBag.SelectedRisk == "Low")">Low</option>
+                    <option value="Medium" selected="@(ViewBag.SelectedRisk == "Medium")">Medium</option>
+                    <option value="High" selected="@(ViewBag.SelectedRisk == "High")">High</option>
                 </select>
             </div>
             <div class="col-md-4 d-flex align-items-end">
@@ -88,8 +102,29 @@
                         <th>Total Inspections:</th>
                         <td>@Model.TotalInspections</td>
                     </tr>
+                    <tr>
+                        <th>Total Follow-ups:</th>
+                        <td>@Model.TotalFollowUps</td>
+                    </tr>
                 </table>
             </div>
         </div>
     </div>
 </div>
+
+<!-- Active Filters Display -->
+@if (!string.IsNullOrEmpty(ViewBag.SelectedTown) || !string.IsNullOrEmpty(ViewBag.SelectedRisk))
+{
+    <div class="alert alert-info mt-3">
+        <strong>Active Filters:</strong>
+        @if (!string.IsNullOrEmpty(ViewBag.SelectedTown))
+        {
+            <span class="badge bg-primary me-1">Town: @ViewBag.SelectedTown</span>
+        }
+        @if (!string.IsNullOrEmpty(ViewBag.SelectedRisk))
+        {
+            <span class="badge bg-primary">Risk: @ViewBag.SelectedRisk</span>
+        }
+        <a asp-action="Index" class="btn btn-sm btn-outline-primary ms-3">Clear All Filters</a>
+    </div>
+}

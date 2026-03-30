@@ -102,5 +102,6 @@ namespace FoodSafetyTracker.Web.Controllers
         public int TotalPremises { get; set; }
         public int TotalInspections { get; set; }
         public double AverageScore { get; set; }
+        public int TotalFollowUps { get; set; }
     }
 }

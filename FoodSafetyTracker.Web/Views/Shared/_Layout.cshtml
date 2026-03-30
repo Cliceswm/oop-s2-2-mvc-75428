@@ -26,47 +26,26 @@
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
                         </li>
-                        @* ============================================
-                            MENU ITEMS FOR LOGGED IN USERS
-                           ============================================ *@
+
+                        @* Show all menu items to any authenticated user (permissions are enforced in controllers/views) *@
                         @if (User.Identity.IsAuthenticated)
                         {
-                            @* Admin gets all menus *@
-                            @if (User.IsInRole("Admin"))
-                            {
-                                <li class="nav-item">
-                                    <a class="nav-link text-dark" asp-controller="Premises" asp-action="Index">Premises</a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link text-dark" asp-controller="Inspections" asp-action="Index">Inspections</a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link text-dark" asp-controller="FollowUps" asp-action="Index">Follow Ups</a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link text-dark" asp-controller="Dashboard" asp-action="Index">Dashboard</a>
-                                </li>
-                            }
-                            @* Inspector gets inspections only *@
-                            else if (User.IsInRole("Inspector"))
-                            {
-                                <li class="nav-item">
-                                    <a class="nav-link text-dark" asp-controller="Inspections" asp-action="Index">Inspections</a>
-                                </li>
-                            }
-                            @* Viewer gets dashboard only *@
-                            else if (User.IsInRole("Viewer"))
-                            {
-                                <li class="nav-item">
-                                    <a class="nav-link text-dark" asp-controller="Dashboard" asp-action="Index">Dashboard</a>
-                                </li>
-                            }
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-controller="Premises" asp-action="Index">Premises</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-controller="Inspections" asp-action="Index">Inspections</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-controller="FollowUps" asp-action="Index">Follow Ups</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-controller="Dashboard" asp-action="Index">Dashboard</a>
+                            </li>
                         }
                     </ul>
-                    
-                    @* ============================================
-                        LOGIN / LOGOUT SECTION (RIGHT SIDE)
-                       ============================================ *@
+
+                    @* Login/Logout section (right side) *@
                     <ul class="navbar-nav">
                         @if (User.Identity.IsAuthenticated)
                         {
